@@ -8,6 +8,7 @@
         public int Quantity { get; set; }
         public int Price { get; set; }
         public virtual Bill Bill { get; set; }
+        public virtual Product Product { get; set; }
 
     }
 }
