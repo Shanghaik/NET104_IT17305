@@ -7,7 +7,7 @@ namespace Shopping_Website.Configurations
     {
         public void Configure(EntityTypeBuilder<BillDetails> builder)
         {
-            builder.ToTable("HoaDon"); // Đặt tên bảng
+            //builder.ToTable("HoaDon"); // Đặt tên bảng
             builder.HasKey(p => p.Id); // Set khóa chính
             // Cấu hình cho thuộc tính
             builder.Property(p => p.Quantity).HasColumnType("int");

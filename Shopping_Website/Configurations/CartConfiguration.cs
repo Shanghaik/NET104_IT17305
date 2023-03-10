@@ -7,7 +7,7 @@ namespace Shopping_Website.Configurations
     {
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
-            builder.HasKey(p => p.UserID);
+            builder.HasKey(p => p.UserId);
             builder.Property(p=> p.Description).
                 HasMaxLength(1000).IsFixedLength().IsUnicode();// nvarchar(1000)
         }
