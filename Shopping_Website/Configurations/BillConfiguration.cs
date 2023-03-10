@@ -13,7 +13,8 @@ namespace Shopping_Website.Configurations
             builder.Property(p => p.CreateDate).HasColumnType("Date");
             builder.Property(p => p.Status).HasColumnType("int").
                 IsRequired(); // int not null
-
+            builder.HasOne(p=>p.User).WithMany(p=>p.Bills).
+                HasForeignKey(p=>p.Id).HasConstraintName("FK_Bill_User");
         }
     }
 }
