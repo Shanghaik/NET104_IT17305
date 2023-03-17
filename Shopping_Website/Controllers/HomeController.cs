@@ -60,16 +60,32 @@ namespace Shopping_Website.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Create(Product product)// Thực hiện việc thêm
         {
             productServices.CreateProduct(product);
             return RedirectToAction("ShowListProduct");
         }
-
-        public IActionResult Update()
+        [HttpGet]
+        public IActionResult Update(Guid id) // Mở form, truyền luôn sang form
         {
-            return View();
+            var product = productServices.GetProductById(id);
+            return View(product);
         }
+        
+        public IActionResult Update(Product p) // Mở form
+        {
+            if (productServices.UpdateProduct(p))
+            {
+                return RedirectToAction("ShowListProduct");
+            }
+            else return BadRequest();
+        }
+        public IActionResult Delete(Guid id)
+        {
+            productServices.DeleteProduct(id);
+            return RedirectToAction("ShowListProduct");
+        }
+    
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
