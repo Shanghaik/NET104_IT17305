@@ -1,6 +1,7 @@
 ﻿using Shopping_Website.IServices;
 using Shopping_Website.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,9 +20,13 @@ builder.Services.AddTransient<IProductServices, ProductServices>();
  * nhận được một đối tượng services khác nhau. Phù hợp cho các services mà có thể
  * phụ vụ nhiều yêu cầu http request.
  */
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(15);
+});
+// Đăng ký Session với thời gian là 15 giây cho đến khi timeout
 
-
-var app = builder.Build();
+var app = builder.Build(); // Các cấu hình phải viết trước dòng này
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -33,7 +38,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();

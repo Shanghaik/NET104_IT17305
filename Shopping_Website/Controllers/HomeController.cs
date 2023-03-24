@@ -24,7 +24,8 @@ namespace Shopping_Website.Controllers
 
         public IActionResult Privacy()
         {
-            
+            var content = HttpContext.Session.GetString("MrSiRo");
+            ViewData["content"] = content;
             return View();
         }
         public IActionResult Test()
@@ -87,7 +88,9 @@ namespace Shopping_Website.Controllers
             productServices.DeleteProduct(id);
             return RedirectToAction("ShowListProduct");
         }
-    
+
+        
+
         public IActionResult TransferData()
         {
             /*
@@ -111,6 +114,22 @@ namespace Shopping_Website.Controllers
              */
             double[] marks = { 4.5, 5.1, 9.9, 6.3, 2.8 };
             ViewBag.Marks = marks;
+            /*
+             * Cách 3: Sử dụng Session (Phiên làm việc)
+             * Để sử dụng Session cần cấu hình tại Program.cs
+             */
+            string message = "Ngừng so sánh, hãy tận hưởng";
+            HttpContext.Session.SetString("MrSiRo", message);
+            // Lấy dữ liệu ra
+            var content = HttpContext.Session.GetString("MrSiRo");
+            ViewData["content"] = content;
+            /*
+             * Ngay sau khi request cuối cùng được thực thi thì session
+             * sẽ khỏi tạo lại bộ đếm thời gian, nếu không có request nào
+             * được thực thi sau đó thì đến thời điểm timeout, session
+             * sẽ bị clear. Nếu 1 request mới được thực thi thì bộ đếm
+             * sẽ được reset
+             */
             return View();
         }
 
