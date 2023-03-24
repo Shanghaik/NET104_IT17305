@@ -1,0 +1,19 @@
+﻿<h3>Xin chào các bạn, chúng tôi tới đây để học lại</h3>
+@{
+    var Anhemfanboy = ViewData["FAN"] as List<string>;
+    var Diem = ViewBag.Marks;
+}
+<p>Chúng tôi là: </p>
+@{
+    foreach (var item in Anhemfanboy)
+    {
+        <h4>@item</h4>
+    }
+}  
+<p>Chúng tôi được: </p>
+@{
+    foreach (var item in Diem)
+    {
+        <h4>@item</h4>
+    }
+}

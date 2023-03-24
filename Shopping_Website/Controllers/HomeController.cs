@@ -3,6 +3,7 @@ using Shopping_Website.IServices;
 using Shopping_Website.Models;
 using Shopping_Website.Services;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace Shopping_Website.Controllers
 {
@@ -23,6 +24,7 @@ namespace Shopping_Website.Controllers
 
         public IActionResult Privacy()
         {
+            
             return View();
         }
         public IActionResult Test()
@@ -86,6 +88,31 @@ namespace Shopping_Website.Controllers
             return RedirectToAction("ShowListProduct");
         }
     
+        public IActionResult TransferData()
+        {
+            /*
+             * Ngoài cách truyền trực tiếp Obj model thì chúng
+             * ta có thể truyền dữ liệu thông qua các cách sau:
+             * Cách 1: Sử dụng ViewData: Truyền dữ liệu dựa theo
+             * Viewdata theo dạng Key-Value, mỗi một ViewData["tên_key]
+             * có thể lưu trữ được một kiểu dữ liệu (Generic)
+             */
+            List<string> ricons = new List<string>()
+            {
+                "Râu con", "Râu nhí", "Râu cha", 
+                "Ri cha", "Sa tị", "Đều là", "Anh em"
+            };
+            ViewData["FAN"] = ricons;
+            /*
+             * Cách 2: Sử dụng ViewBag 
+             * ViewBag không cần khởi tạo mà có thể đặt tên 
+             * luôn cho thành phần vì đó là 1 lớp abstract
+             * Dữ liệu trong ViewBag là Dynamic
+             */
+            double[] marks = { 4.5, 5.1, 9.9, 6.3, 2.8 };
+            ViewBag.Marks = marks;
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
