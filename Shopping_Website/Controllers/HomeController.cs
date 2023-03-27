@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Shopping_Website.IServices;
 using Shopping_Website.Models;
 using Shopping_Website.Services;
@@ -55,9 +56,27 @@ namespace Shopping_Website.Controllers
         public IActionResult ShowListProduct()
         {
             var products = productServices.GetAllProducts();
+            // Khi lấy được List ra thì đưa dữ liệu vào Session
+            string jsonData = JsonConvert.SerializeObject(products);
+            // Đưa chuỗi dữ liệu vừa lấy được vào Session
+            HttpContext.Session.SetString("JsonData", jsonData);
             return View(products); // Truyền tới View 1 object model
         }
-
+        public IActionResult GetListFromSession()
+        {
+            // Lấy dữ liệu ra từ Session 
+            var jsonData = HttpContext.Session.GetString("JsonData");
+            // Nếu Dữ liệu trong Session không có hoặc không tồn tại
+            if (jsonData == null) return Content("Tầm này phải lôi cúp ra đếm + đọ follow");
+            // Nếu có thì đọc ra List và truyền vào View
+            var products = JsonConvert.DeserializeObject<List<Product>>(jsonData);           
+            return View(products);
+        }
+        public IActionResult DeleteSession() // Chủ động xóa Session
+        {
+            HttpContext.Session.Remove("JsonData"); // Xóa theo key cụ thể
+            return RedirectToAction("GetListFromSession");
+        }
         public IActionResult Create() // Mở form
         {
             return View();
@@ -128,7 +147,7 @@ namespace Shopping_Website.Controllers
              * sẽ khỏi tạo lại bộ đếm thời gian, nếu không có request nào
              * được thực thi sau đó thì đến thời điểm timeout, session
              * sẽ bị clear. Nếu 1 request mới được thực thi thì bộ đếm
-             * sẽ được reset
+             * sẽ được reset.
              */
             return View();
         }
