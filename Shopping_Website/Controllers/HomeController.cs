@@ -69,7 +69,7 @@ namespace Shopping_Website.Controllers
             // Nếu Dữ liệu trong Session không có hoặc không tồn tại
             if (jsonData == null) return Content("Tầm này phải lôi cúp ra đếm + đọ follow");
             // Nếu có thì đọc ra List và truyền vào View
-            var products = JsonConvert.DeserializeObject<List<Product>>(jsonData);           
+            var products = JsonConvert.DeserializeObject<List<Product>>(jsonData);
             return View(products);
         }
         public IActionResult DeleteSession() // Chủ động xóa Session
@@ -93,7 +93,7 @@ namespace Shopping_Website.Controllers
             var product = productServices.GetProductById(id);
             return View(product);
         }
-        
+
         public IActionResult Update(Product p) // Mở form
         {
             if (productServices.UpdateProduct(p))
@@ -102,13 +102,18 @@ namespace Shopping_Website.Controllers
             }
             else return BadRequest();
         }
+        public IActionResult Details(Guid id)
+        {
+            var product = productServices.GetProductById(id);
+            return View(product);
+        }
         public IActionResult Delete(Guid id)
         {
             productServices.DeleteProduct(id);
             return RedirectToAction("ShowListProduct");
         }
 
-        
+
 
         public IActionResult TransferData()
         {
@@ -121,7 +126,7 @@ namespace Shopping_Website.Controllers
              */
             List<string> ricons = new List<string>()
             {
-                "Râu con", "Râu nhí", "Râu cha", 
+                "Râu con", "Râu nhí", "Râu cha",
                 "Ri cha", "Sa tị", "Đều là", "Anh em"
             };
             ViewData["FAN"] = ricons;
@@ -150,6 +155,34 @@ namespace Shopping_Website.Controllers
              * sẽ được reset.
              */
             return View();
+        }
+
+        public IActionResult AddToCart(Guid id) // Sử dụng Session
+        {
+            // Lấy đối tượng ra từ db để thêm vào giỏ hàng trong Session
+            var product = productServices.GetProductById(id);
+            // Đọc từ Session danh sách sp trong giỏ hàng
+            var products = SessionServices.GetObjFromSession(HttpContext.Session, "Cart");
+            if (products.Count == 0) // Trong trường hợp mà list rỗng
+            {
+                products.Add(product);
+                SessionServices.SetObjToSession(HttpContext.Session, "Cart", products);
+            }
+            else
+            {
+                if(SessionServices.CheckExistProduct(id, products))
+                    return Content("Bình thường sẽ + số lượng nhưng tôi không thích thế");
+                else { // Nếu sp chưa tồn tại trong giỏ hàng thì thêm như bth
+                    products.Add(product);
+                    SessionServices.SetObjToSession(HttpContext.Session, "Cart", products);
+                }
+            }
+            return RedirectToAction("ShowCart");
+        }
+        public IActionResult ShowCart()
+        {
+            var products = SessionServices.GetObjFromSession(HttpContext.Session, "Cart");
+            return View(products);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
