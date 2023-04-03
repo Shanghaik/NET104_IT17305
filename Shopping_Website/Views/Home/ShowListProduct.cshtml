@@ -2,6 +2,10 @@
 
 @{
     ViewData["Title"] = "ShowListProduct";
+    List<string> imageExtensions = new List<string>()
+    {
+        ".png", ".jpg", ".jpeg", ".gif", ".tiff", ".pdf"
+    };
 }
 
 <h1>ShowListProduct</h1>
@@ -59,7 +63,15 @@
                     @Html.DisplayFor(modelItem => item.Supplier)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @{string extension = System.IO.Path.GetExtension(item.Description);}
+                    @if (imageExtensions.Contains(extension.Trim()))
+                    {
+                        <img src="~/images/@item.Description" height="100px">
+                    }
+                    else
+                    {
+                        <img src="~/images/default.png" height="100px">
+                    }
                 </td>
                 <td>
                     @Html.ActionLink("Sửa", "Update", new { id=item.Id  }) |
