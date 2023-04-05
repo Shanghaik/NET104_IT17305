@@ -42,7 +42,7 @@ app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseStatusCodePagesWithReExecute("/Home/Index"); // Nhảy về trang chủ khi route sai
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
