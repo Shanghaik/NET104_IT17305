@@ -82,8 +82,19 @@ namespace Shopping_Website.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Product product)// Thực hiện việc thêm
+        public IActionResult Create(Product product, IFormFile imageFile)// Thực hiện việc thêm
         {
+            if(imageFile != null && imageFile.Length > 0) // Kiểm tra đường dẫn phù hợp
+            {
+                // thực hiện việc sao chép ảnh đó vào wwwroot
+                // Tạo đường dẫn tới thư mục sao chép (nằm trong root)
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
+                    "images", imageFile.FileName); // abc/wwwroot/images/xxx.png
+                var stream = new FileStream(path, FileMode.Create); // Tạo 1 filestream để tạo mới
+                imageFile.CopyTo(stream); // Copy ảnh vừa dc chọn vào đúng cái stream đó
+                // Gán lại giá trị link ảnh (lúc này đã nằm trong root cho thuộc tính description)
+                product.Description = imageFile.FileName;
+            }
             productServices.CreateProduct(product);
             return RedirectToAction("ShowListProduct");
         }
